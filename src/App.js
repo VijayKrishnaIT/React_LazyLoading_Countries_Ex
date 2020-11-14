@@ -1,25 +1,42 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { Component } from "react";
+import { userAPI } from "./api/userAPI";
+import { UserTable, LoadButton } from "./components";
+import "./App.css";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+export class App extends Component {
+  constructor() {
+    super();
+
+    this.state = {
+      users: [],
+    };
+
+    this.onLoadTables = this.onLoadTables.bind(this);
+  }
+
+  onLoadTables() {
+    this.setState({
+      users: [],
+    });
+
+    userAPI.fetchUsers().then((users) => {
+      this.setState({
+        users,
+      });
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <LoadButton
+          onLoad={this.onLoadTables}
+          title="Load user table with delay"
+        />
+        <div>
+          <UserTable users={this.state.users} />
+        </div>
+      </div>
+    );
+  }
 }
-
-export default App;
